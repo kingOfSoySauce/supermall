@@ -19,7 +19,7 @@ export default {
   line-height: 44px;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 1px rgba(100,100,100,.1);
+  box-shadow: 0 3px 3px rgba(51, 51, 51, 0.1);
 }
 .left {
   order: 0;
