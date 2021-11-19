@@ -3,9 +3,12 @@
 /*:root -> 获取根元素html*/
 :root {
   --color-text: #666;
+  --color-normol-text:#A7A7A7;
   --color-high-text: #ff5777;
   --color-tint: #ff8198;
   --color-background: #fff;
+  --color-sale:#FFBD71;
+  --color-cfav:#646FB0;
   --font-size: 14px;
   --line-height: 1.5;
 }

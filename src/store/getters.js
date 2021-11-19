@@ -1,5 +1,8 @@
 export default {
-  getNum(state) {
-    return state.num
+  getTabIndex(state) {
+    return state.TabControlCurrentIndex
+  },
+  getTabName(state) {
+    return state.TabName[state.TabControlCurrentIndex]
   },
 }
