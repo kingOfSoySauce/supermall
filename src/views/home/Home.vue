@@ -7,38 +7,42 @@
       </template>
     </nav-bar>
 
+    <!-- 返回顶部 -->
+    <back-top @click.native="backClick" v-if="showBackTop"></back-top>
 
-    <!-- 轮播图 -->
-    <swipe :banners="banners"></swipe>
+    <!-- 滚动better-scroll -->
+    <scroll class="content" ref="scroll" :probe-type="3" :pullUpLoad="true" @scroll="contenScroll" @pullingUp="loadMore">
+      <!-- 轮播图 -->
+      <swipe :banners="banners"></swipe>
 
-    <!-- 推荐 -->
-    <recommend-view :recommends="recommends"></recommend-view>
+      <!-- 推荐 -->
+      <recommend-view :recommends="recommends"></recommend-view>
 
-    <!-- 推荐列表 -->
-    <feature-view></feature-view>
+      <!-- 推荐列表 -->
+      <feature-view></feature-view>
 
-    <!-- 分类bar -->
-    <tab-control :title="['流行', '新款', '精选']" class="tab-control"></tab-control>
+      <!-- 分类bar -->
+      <tab-control :title="['流行', '新款', '精选']" class="tab-control" @click.native="clickTabControl"></tab-control>
 
-    <!-- 商品列表 -->
-    <goods-list :goods="goods[getTabName].list"></goods-list>
-
-
+      <!-- 商品列表 -->
+      <goods-list :goods="goods[getTabName].list"></goods-list>
+    </scroll>
   </div>
 </template>
 
 <script>
 import { getHomeMultidata, getHomeGoods } from 'network/home'
 import { mapGetters } from 'vuex'
-import BScroll from 'better-scroll'
 
 import NavBar from '../../components/common/navbar/NavBar'
 import Swipe from '../../components/common/swipe/Swipe'
 import TabControl from '../../components/content/tabControl/TabControl.vue'
 
+import Scroll from '@/components/common/scroll/scroll.vue'
 import RecommendView from './childComps/RecommendView.vue'
 import FeatureView from './childComps/FeatureView.vue'
 import GoodsList from '../../components/content/goods/GoodsList.vue'
+import BackTop from 'components/content/backTop/BackTop'
 
 export default {
   data() {
@@ -47,6 +51,7 @@ export default {
       recommends: [],
       dKeywords: [],
       keywords: [],
+      showBackTop: false,
 
       goods: {
         pop: { page: 0, list: [] },
@@ -55,8 +60,8 @@ export default {
       },
     }
   },
-   computed: {
-    ...mapGetters(['getTabName'])
+  computed: {
+    ...mapGetters(['getTabName']),
   },
   async created() {
     //请求多个数据
@@ -67,16 +72,29 @@ export default {
     this.getHomeGoots('new')
     this.getHomeGoots('sell')
   },
-  // deactivated() {
-  //   console.log('home休眠')
-  // },
-  // activated() {
-  //   console.log('home 激活')
-  // },
-  // destroyed() {
-  //   console.log('home销毁')
-  // },
   methods: {
+    //返回顶部
+    backClick() {
+      this.$refs.scroll.scrollTo()
+    },
+
+    //内容滚动，弹出或隐藏backTop
+    contenScroll(position) {
+      if (position.y < -1000) {
+        this.showBackTop = true
+      } else {
+        this.showBackTop = false
+      }
+    },
+
+    //下拉加载更多
+    loadMore() {
+      console.log('lomo')
+      this.getHomeGoots(this.getTabName)
+      
+      this.$refs.scroll.refresh()
+    },
+
     //轮播图等数据
     async getHomeMultidata() {
       //1.请求多个数据
@@ -97,20 +115,33 @@ export default {
       const { data: res } = await getHomeGoods(type, page + 1)
 
       //2.赋值到本地
-      // console.log(res.data.list)
       this.goods[type].list = [...this.goods[type].list, ...res.data.list]
       this.goods[type].page++
+
+      //刷新下拉
+      this.$refs.scroll.refresh()
+      this.$refs.scroll.finishPullup()
+    },
+
+    //点击切换卡片
+    clickTabControl() {
+      console.log('clili')
+      this.$refs.scroll.refresh()
     },
   },
-  components: { NavBar, Swipe, RecommendView, FeatureView, TabControl, GoodsList },
+  components: { BackTop, Scroll, NavBar, Swipe, RecommendView, FeatureView, TabControl, GoodsList },
 }
 </script>
 
 <style lang="less" scoped>
 .home-container {
   // background-color: pink;
-  padding-top: 43px;
+  // padding-top: 43px;
+  height: 100vh;
+  position: relative;
 }
+
+//home头顶的导航栏
 .home-nav {
   position: fixed;
   left: 0;
@@ -128,5 +159,17 @@ export default {
   position: sticky;
   background-color: rgb(248, 242, 242);
   top: 43px;
+}
+
+// 滚动的高度
+.content {
+  // overflow: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44px;
+  bottom: 49px;
+  // height: calc(100% - 48px);
+  // overflow: hidden;
 }
 </style>

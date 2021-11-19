@@ -2,7 +2,7 @@
   <div class="goods" ref="goods">
     <!-- {{goods}} -->
     <!-- <div class="item"> -->
-    <goods-list-item v-for="item in goods" :key="item.iid" :goodsItem="item" />
+    <goods-list-item v-for="item in goods" :key="item.acm" :goodsItem="item" />
     <!-- </div> -->
   </div>
 </template>

@@ -5,4 +5,5 @@ export default {
   getTabName(state) {
     return state.TabName[state.TabControlCurrentIndex]
   },
+  
 }
