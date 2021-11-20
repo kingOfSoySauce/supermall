@@ -6,6 +6,7 @@ import Home from 'views/home/Home.vue'
 const Cart = () => import('D:/newDesktop/前端/project/11-15/supermall/src/views/cart/Cart.vue')
 const Category = () => import('views/category/Category.vue')
 const Profile = () => import('views/profile/Profile.vue')
+const Detail = () => import('views/detail/Detail.vue')
 
 //解决vue-router重复点击报错问题（this.$router.replace()）
 const originalPush = VueRouter.prototype.replace
@@ -37,6 +38,10 @@ const routes = [
   {
     path: '/profile',
     component: Profile,
+  },
+  {
+    path: '/detail/:id',
+    component: Detail,
   },
 ]
 

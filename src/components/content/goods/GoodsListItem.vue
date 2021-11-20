@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-list-item">
-    <a :href="goodsItem.link">
+  <div class="goods-list-item" @click="itemClick">
+    <!-- <a :href="goodsItem.link"> -->
       <img :src="goodsItem.show.img" alt="" />
       <div class="font">
         <span class="orgPrice">{{ goodsItem.orgPrice }}</span>
@@ -22,7 +22,7 @@
           </span>
         </div>
       </div>
-    </a>
+    <!-- </a> -->
   </div>
 </template>
 
@@ -34,6 +34,11 @@ export default {
       default: () => [],
     },
   },
+  methods:{
+    itemClick(){
+      this.$router.push('/detail/'+this.goodsItem.iid)
+    }
+  }
 }
 </script>
 

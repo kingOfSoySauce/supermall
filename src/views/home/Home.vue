@@ -19,13 +19,13 @@
       <!-- 下拉提示文字 -->
       <PullingDownTip class="PullingDownTip"></PullingDownTip>
       <!-- 轮播图 -->
-      <swipe :banners="banners"></swipe>
+      <swipe :banners="banners" class="height:195px"></swipe>
 
       <!-- 推荐 -->
-      <recommend-view :recommends="recommends"></recommend-view>
+      <recommend-view :recommends="recommends" class="height:140.61px"></recommend-view>
 
       <!-- 推荐列表 -->
-      <feature-view></feature-view>
+      <feature-view class="height:278.06px"></feature-view>
 
       <!-- 分类bar -->
       <tab-control :title="['流行', '新款', '精选']" class="tab-control" ref="tabControl" @click.native="clickTabControl"></tab-control>
@@ -52,6 +52,7 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
 import BackTop from 'components/content/backTop/BackTop'
 
 export default {
+  name:'Home',
   data() {
     return {
       banners: [],

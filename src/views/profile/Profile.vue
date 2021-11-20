@@ -7,6 +7,7 @@
 <script>
 // import Scroll from '@/components/common/scroll/scroll.vue'
 export default {
+  name:'Profile',
   components: {
     // Scroll,
   },
