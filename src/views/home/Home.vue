@@ -11,7 +11,9 @@
     <back-top @click.native="backClick" v-if="showBackTop"></back-top>
 
     <!-- 滚动better-scroll -->
-    <scroll class="content" ref="scroll" :probe-type="3" :pullUpLoad="true" @scroll="contenScroll" @pullingUp="loadMore">
+    <scroll class="content" ref="scroll" :probe-type="3" :pullUpLoad="true" :pullDownRefresh="true" @scroll="contenScroll" @pullingUp="loadMore" @pullingDown="pullDownRefresh">
+      <!-- 下拉提示文字 -->
+      <PullingDownTip class="PullingDownTip"></PullingDownTip>
       <!-- 轮播图 -->
       <swipe :banners="banners"></swipe>
 
@@ -34,13 +36,14 @@
 import { getHomeMultidata, getHomeGoods } from 'network/home'
 import { mapGetters } from 'vuex'
 
-import NavBar from '../../components/common/navbar/NavBar'
-import Swipe from '../../components/common/swipe/Swipe'
-import TabControl from '../../components/content/tabControl/TabControl.vue'
+import NavBar from 'components/common/navbar/NavBar'
+import Swipe from 'components/common/swipe/Swipe'
+import TabControl from 'components/content/tabControl/TabControl.vue'
 
-import Scroll from '@/components/common/scroll/scroll.vue'
+import Scroll from 'components/common/scroll/scroll.vue'
 import RecommendView from './childComps/RecommendView.vue'
 import FeatureView from './childComps/FeatureView.vue'
+import PullingDownTip from './childComps/PullingDownTip.vue'
 import GoodsList from '../../components/content/goods/GoodsList.vue'
 import BackTop from 'components/content/backTop/BackTop'
 
@@ -75,7 +78,7 @@ export default {
   methods: {
     //返回顶部
     backClick() {
-      this.$refs.scroll.scrollTo()
+      this.$refs.scroll.scroll.scrollTo(0, 0, 300)
     },
 
     //内容滚动，弹出或隐藏backTop
@@ -89,10 +92,14 @@ export default {
 
     //下拉加载更多
     loadMore() {
-      console.log('lomo')
       this.getHomeGoots(this.getTabName)
-      
-      this.$refs.scroll.refresh()
+      this.$refs.scroll.scroll.refresh()
+    },
+
+    //上拉刷新
+    pullDownRefresh() {
+      this.getHomeGoots(this.getTabName, false)
+      this.$refs.scroll.scroll.refresh()
     },
 
     //轮播图等数据
@@ -107,29 +114,34 @@ export default {
       this.keywords = res.data.keywords.list
     },
 
-    //请求商品数据
-    async getHomeGoots(type) {
+    //默认请求商品数据，第二参数为false时，刷新数据
+    async getHomeGoots(type, loadMore = true) {
       const page = this.goods[type].page
 
       //1.请求数据
       const { data: res } = await getHomeGoods(type, page + 1)
 
-      //2.赋值到本地
-      this.goods[type].list = [...this.goods[type].list, ...res.data.list]
-      this.goods[type].page++
+      if (loadMore == true) {
+        //2.加载更多，插到末尾
+        this.goods[type].list = [...this.goods[type].list, ...res.data.list]
+        this.$refs.scroll.scroll.finishPullUp()
+      } else {
+        //3.刷新列表，插到前面
+        this.goods[type].list = [...res.data.list, ...this.goods[type].list]
+        this.$refs.scroll.scroll.finishPullDown()
+      }
 
       //刷新下拉
-      this.$refs.scroll.refresh()
-      this.$refs.scroll.finishPullup()
+      this.$refs.scroll.scroll.refresh()
+      this.goods[type].page++
     },
 
     //点击切换卡片
     clickTabControl() {
-      console.log('clili')
-      this.$refs.scroll.refresh()
+      this.$refs.scroll.scroll.refresh()
     },
   },
-  components: { BackTop, Scroll, NavBar, Swipe, RecommendView, FeatureView, TabControl, GoodsList },
+  components: { PullingDownTip, BackTop, Scroll, NavBar, Swipe, RecommendView, FeatureView, TabControl, GoodsList },
 }
 </script>
 
@@ -171,5 +183,14 @@ export default {
   bottom: 49px;
   // height: calc(100% - 48px);
   // overflow: hidden;
+}
+
+//下拉刷新提示文字
+.PullingDownTip {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: -40px;
 }
 </style>

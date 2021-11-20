@@ -2,6 +2,7 @@
 
 /*:root -> 获取根元素html*/
 :root {
+  --color-title:#000;
   --color-text: #666;
   --color-normol-text:#A7A7A7;
   --color-high-text: #ff5777;

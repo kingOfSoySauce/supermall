@@ -5,5 +5,7 @@ export default {
   getTabName(state) {
     return state.TabName[state.TabControlCurrentIndex]
   },
-  
+  getThreshold(state) {
+    return state.Threshold
+  },
 }

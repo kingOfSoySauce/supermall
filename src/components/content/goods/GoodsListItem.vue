@@ -66,15 +66,16 @@ export default {
       color: var(--color-normol-text);
     }
     .price {
+      font-weight: 900;
       font-size: 15px;
       color: var(--color-high-text);
     }
 
     .title {
-      margin: 3px 0 3px 0;
-      font-size: 13px;
+      margin: 5px 0 7px 0;
+      font-size: 15px;
       font-weight: 300;
-      color: var(--color-text);
+      color: var(--color-title);
 
       // 多出省略号
       overflow: hidden;
@@ -89,14 +90,14 @@ export default {
       font-size: 11px;
       .sale {
         position: absolute;
-        left: 0;
+        left: 3px;
         .sale-num {
           color: var(--color-sale);
         }
       }
       .cfav {
         position: absolute;
-        right: 0;
+        right: 3px;
         .cfav-num {
           color: var(--color-cfav);
         }

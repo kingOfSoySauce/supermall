@@ -27,9 +27,7 @@ export default {
       return this.goods.slice(this.goods.length / 2, this.goods.length)
     },
   },
-  mounted() {
-    console.log(this.$refs.goods.clientHeight)
-  },
+  mounted() {},
   components: { GoodsListItem },
 }
 </script>

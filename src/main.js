@@ -7,6 +7,8 @@ import 'vant/lib/index.css'
 
 Vue.config.productionTip = false
 
+Vue.prototype.$bus =new Vue()
+
 Vue.use(Vant)
 
 new Vue({
