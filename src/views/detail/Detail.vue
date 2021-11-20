@@ -2,19 +2,22 @@
   <div id="detail">
     <DetailNavBar></DetailNavBar>
     <detail-swiper :topImages="topImages"></detail-swiper>
+    <detail-base-info :goods="goods"></detail-base-info>
   </div>
 </template>
 
 <script>
-import { getDetailData } from 'network/detail'
+import { getDetailData, Goods } from 'network/detail'
 import DetailNavBar from './chileComps/DetailNavBar.vue'
 import DetailSwiper from './chileComps/DetailSwiper.vue'
+import DetailBaseInfo from './chileComps/DetailBaseInfo.vue'
 export default {
-  name:'Detail',
+  name: 'Detail',
   data() {
     return {
       iid: null,
       topImages: [],
+      goods: null,
     }
   },
   created() {
@@ -27,14 +30,18 @@ export default {
   methods: {
     async getDetailData() {
       const { data: res } = await getDetailData(this.iid)
-      // console.log(res)
-      // console.log(res.result.itemInfo.topImages);
-      this.topImages = res.result.itemInfo.topImages
+      const data = res.result
+      console.log(data)
+      this.topImages = data.itemInfo.topImages
+
+      //整合标题信息
+      this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services)
     },
   },
   components: {
     DetailNavBar,
     DetailSwiper,
+    DetailBaseInfo,
   },
 }
 </script>
