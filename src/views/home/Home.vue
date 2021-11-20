@@ -1,15 +1,16 @@
 <template>
   <div class="home-container">
-    <!-- 顶部标题 -->
-    <nav-bar class="home-nav">
-      <template v-slot:center>
-        <div>购物街</div>
-      </template>
-    </nav-bar>
+    <div class="fixedTop">
+      <!-- 顶部标题 -->
+      <nav-bar class="home-nav">
+        <template v-slot:center>
+          <div>购物街</div>
+        </template>
+      </nav-bar>
 
-    <!-- 固定的分类bar -->
-    <tab-control :title="['流行', '新款', '精选']" class="tab-control" @click.native="clickTabControl" v-if="isTabShow"></tab-control>
-
+      <!-- 固定的分类bar -->
+      <tab-control :title="['流行', '新款', '精选']" class="tab-control" @click.native="clickTabControl" v-if="isTabShow"></tab-control>
+    </div>
     <!-- 返回顶部 -->
     <back-top @click.native="backClick" v-if="showBackTop"></back-top>
 
@@ -102,7 +103,7 @@ export default {
       //吸顶效果
       if (-position.y > this.tabOffsetTop) {
         this.isTabShow = true
-      }else{
+      } else {
         this.isTabShow = false
       }
     },
@@ -168,38 +169,25 @@ export default {
   position: relative;
 }
 
-//home头顶的导航栏
-.home-nav {
-  position: relative;
-  // left: 0;
-  // right: 0;
-  // top: 0;
-  z-index: 10;
-
-  background-color: var(--color-tint);
-  color: #fff;
-}
-
-// 吸顶效果
-.tab-control {
-  position: relative;
-  z-index: 6;
-  // position: sticky;
-  background-color: rgb(255, 255, 255);
-  // top: 43px;
-}
-
-.fixed {
+.fixedTop {
   position: fixed;
   left: 0;
   right: 0;
-  top: 43px;
-  z-index: 9;
+  top: 0;
+  z-index: 10;
+  //home头顶的导航栏
+  .home-nav {
+    background-color: var(--color-tint);
+    color: #fff;
+  }
+}
+// 吸顶效果
+.tab-control {
+  background-color: rgb(255, 255, 255);
 }
 
 // 滚动的高度
 .content {
-  // overflow: hidden;
   position: absolute;
   left: 0;
   right: 0;

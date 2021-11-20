@@ -7,6 +7,13 @@ const Cart = () => import('D:/newDesktop/前端/project/11-15/supermall/src/view
 const Category = () => import('views/category/Category.vue')
 const Profile = () => import('views/profile/Profile.vue')
 
+//解决vue-router重复点击报错问题（this.$router.replace()）
+const originalPush = VueRouter.prototype.replace
+VueRouter.prototype.replace = function replace(location) {
+  return originalPush.call(this, location).catch((err) => err)
+}
+
+
 Vue.use(VueRouter)
 
 const routes = [

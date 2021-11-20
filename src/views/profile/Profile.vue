@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Scroll class="content" probeType="0"></Scroll>
+    <!-- <Scroll class="content" probeType="0"></Scroll> -->
   </div>
 </template>
 
 <script>
-import Scroll from '@/components/common/scroll/scroll.vue'
+// import Scroll from '@/components/common/scroll/scroll.vue'
 export default {
   components: {
-    Scroll,
+    // Scroll,
   },
 }
 </script>
