@@ -7,6 +7,9 @@
       </template>
     </nav-bar>
 
+    <!-- 固定的分类bar -->
+    <tab-control :title="['流行', '新款', '精选']" class="tab-control" @click.native="clickTabControl" v-if="isTabShow"></tab-control>
+
     <!-- 返回顶部 -->
     <back-top @click.native="backClick" v-if="showBackTop"></back-top>
 
@@ -24,7 +27,7 @@
       <feature-view></feature-view>
 
       <!-- 分类bar -->
-      <tab-control :title="['流行', '新款', '精选']" class="tab-control" @click.native="clickTabControl"></tab-control>
+      <tab-control :title="['流行', '新款', '精选']" class="tab-control" ref="tabControl" @click.native="clickTabControl"></tab-control>
 
       <!-- 商品列表 -->
       <goods-list :goods="goods[getTabName].list"></goods-list>
@@ -55,6 +58,8 @@ export default {
       dKeywords: [],
       keywords: [],
       showBackTop: false,
+      tabOffsetTop: 622,
+      isTabShow: false,
 
       goods: {
         pop: { page: 0, list: [] },
@@ -66,7 +71,7 @@ export default {
   computed: {
     ...mapGetters(['getTabName']),
   },
-  async created() {
+  created() {
     //请求多个数据
     this.getHomeMultidata()
 
@@ -75,18 +80,30 @@ export default {
     this.getHomeGoots('new')
     this.getHomeGoots('sell')
   },
+  mounted() {},
+  updated() {
+    this.tabOffsetTop = this.$refs.tabControl && this.$refs.tabControl.$el.offsetTop
+  },
   methods: {
     //返回顶部
     backClick() {
       this.$refs.scroll.scroll.scrollTo(0, 0, 300)
     },
 
-    //内容滚动，弹出或隐藏backTop
+    //内容滚动
     contenScroll(position) {
+      //弹出或隐藏backTop
       if (position.y < -1000) {
         this.showBackTop = true
       } else {
         this.showBackTop = false
+      }
+
+      //吸顶效果
+      if (-position.y > this.tabOffsetTop) {
+        this.isTabShow = true
+      }else{
+        this.isTabShow = false
       }
     },
 
@@ -147,18 +164,16 @@ export default {
 
 <style lang="less" scoped>
 .home-container {
-  // background-color: pink;
-  // padding-top: 43px;
   height: 100vh;
   position: relative;
 }
 
 //home头顶的导航栏
 .home-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
+  position: relative;
+  // left: 0;
+  // right: 0;
+  // top: 0;
   z-index: 10;
 
   background-color: var(--color-tint);
@@ -167,10 +182,19 @@ export default {
 
 // 吸顶效果
 .tab-control {
-  z-index: 9;
-  position: sticky;
-  background-color: rgb(248, 242, 242);
+  position: relative;
+  z-index: 6;
+  // position: sticky;
+  background-color: rgb(255, 255, 255);
+  // top: 43px;
+}
+
+.fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
   top: 43px;
+  z-index: 9;
 }
 
 // 滚动的高度
@@ -181,8 +205,6 @@ export default {
   right: 0;
   top: 44px;
   bottom: 49px;
-  // height: calc(100% - 48px);
-  // overflow: hidden;
 }
 
 //下拉刷新提示文字
