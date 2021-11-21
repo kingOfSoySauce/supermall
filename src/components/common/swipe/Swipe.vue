@@ -3,7 +3,7 @@
     <van-swipe class="my-swipe" :autoplay="3000" >
       <van-swipe-item v-for="item in banners" :key="item.acm">
         <a :href="item.link">
-          <img :src="item.image" alt="" width="100%" />
+          <img :src="item.image" alt="" width="100%" @load="imgLoad"/>
         </a>
       </van-swipe-item>
     </van-swipe>
@@ -20,6 +20,11 @@ export default {
       type: Array,
     },
   },
+  methods:{
+    imgLoad(){
+      this.$bus.$emit('imgLoad')
+    }
+  }
 }
 </script>
 

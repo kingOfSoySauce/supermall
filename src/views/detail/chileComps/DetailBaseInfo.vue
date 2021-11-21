@@ -1,13 +1,13 @@
 <template>
-  <div class="box">
+  <div class="box" v-if="goods && goods.columns && goods.services">
     <!-- 标题 -->
     <h3 class="title">{{ goods.title }}</h3>
 
     <!-- 价格 -->
     <div class="price">
-      <span class="newPrice">{{ goods.newPrice }}</span>
-      <span class="oldPrice">&nbsp;{{ goods.oldPrice }}&nbsp;</span>
-      <span class="discount">{{ goods.discount }}</span>
+      <span class="newPrice">{{ goods.realprice }}</span>
+      <span class="oldPrice" v-if="goods.oldPrice">&nbsp;{{ goods.oldPrice }}&nbsp;</span>
+      <span class="discount" v-if="goods.discount">{{ goods.discount }}</span>
     </div>
 
     <!-- 销量 收藏 退货补运费 -->
@@ -35,9 +35,9 @@
 export default {
   props: {
     goods: {
-      type: Array,
+      type: Object,
       default() {
-        return []
+        return {}
       },
     },
   },

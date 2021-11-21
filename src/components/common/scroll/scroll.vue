@@ -48,10 +48,10 @@ export default {
       this.scroll && this.scroll.refresh()
     },
     finishPullup() {
-      this.scroll && this.scroll.finishPullUp()
+      this.scroll && this.pullUpLoad && this.scroll.finishPullUp()
     },
     finishPullDown() {
-      this.scroll && this.scroll.finishPullDown()
+      this.scroll &&this.pullDownRefresh&& this.scroll.finishPullDown()
     },
   },
   mounted() {
@@ -72,11 +72,14 @@ export default {
     })
 
     //3.上拉加载更多事件
-    this.scroll.on('pullingUp', () => {
+    if(this.pullUpLoad){
+      this.scroll.on('pullingUp', () => {
       this.$emit('pullingUp')
     })
+    }
 
-    //4.下拉刷新事件
+    if(this.pullDownRefresh){
+      //4.下拉刷新事件
     this.scroll.on('pullingDown', () => {
       this.$emit('pullingDown')
     })
@@ -89,6 +92,7 @@ export default {
     this.scroll.on('leaveThreshold', () => {
       this.leaveThreshold()
     })
+    }
   },
   methods: {
     ...mapMutations(['enterThreshold', 'leaveThreshold']),

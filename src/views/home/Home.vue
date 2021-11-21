@@ -52,7 +52,7 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
 import BackTop from 'components/content/backTop/BackTop'
 
 export default {
-  name:'Home',
+  name: 'Home',
   data() {
     return {
       banners: [],
@@ -62,6 +62,8 @@ export default {
       showBackTop: false,
       tabOffsetTop: 622,
       isTabShow: false,
+      timer: null,
+      debounceTime: null,
 
       goods: {
         pop: { page: 0, list: [] },
@@ -82,7 +84,17 @@ export default {
     this.getHomeGoots('new')
     this.getHomeGoots('sell')
   },
-  mounted() {},
+  mounted() {
+    this.$bus.$on('imgLoad', () => {
+      clearTimeout(this.debounceTime)
+
+      this.debounceTime = setTimeout(() => {
+        this.$refs.scroll.scroll.refresh()
+        clearTimeout(this.debounceTime)
+        this.debounceTime = null
+      }, 200)
+    })
+  },
   updated() {
     this.tabOffsetTop = this.$refs.tabControl && this.$refs.tabControl.$el.offsetTop
   },
@@ -94,20 +106,40 @@ export default {
 
     //内容滚动
     contenScroll(position) {
-      //弹出或隐藏backTop
-      if (position.y < -1000) {
-        this.showBackTop = true
-      } else {
-        this.showBackTop = false
-      }
-
       //吸顶效果
       if (-position.y > this.tabOffsetTop) {
         this.isTabShow = true
       } else {
         this.isTabShow = false
       }
+      //弹出或隐藏backTop
+      if (position.y < -1000) {
+        this.showBackTop = true
+      } else {
+        this.showBackTop = false
+      }
     },
+    // contenScroll(position) {
+    //   console.log(222);
+    //   throttle(() => {
+    //     console.log(111);
+    //     this.$refs.scroll.scroll.refresh()
+
+    //     //弹出或隐藏backTop
+    //     if (position.y < -1000) {
+    //       this.showBackTop = true
+    //     } else {
+    //       this.showBackTop = false
+    //     }
+
+    //     //吸顶效果
+    //     if (-position.y > this.tabOffsetTop) {
+    //       this.isTabShow = true
+    //     } else {
+    //       this.isTabShow = false
+    //     }
+    //   }, 100)()
+    // },
 
     //下拉加载更多
     loadMore() {

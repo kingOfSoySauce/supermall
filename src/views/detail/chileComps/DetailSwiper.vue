@@ -1,7 +1,7 @@
 <template>
     <van-swipe :autoplay="3000" class="detailSwipe">
       <van-swipe-item v-for="item in topImages" :key="item" class="item">
-        <img :src="item" alt="" width="100%" />
+        <img :src="item" alt="" width="100%" @load="detailImgLoad"/>
       </van-swipe-item>
     </van-swipe>
 </template>
@@ -21,6 +21,11 @@ export default {
       },
     },
   },
+  methods:{
+    detailImgLoad(){
+      this.$bus.$emit('detailImgLoad')
+    }
+  }
 }
 </script>
 
