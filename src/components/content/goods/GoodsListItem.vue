@@ -44,7 +44,12 @@ export default {
   },
   methods: {
     itemClick() {
-      this.$router.push('/detail/' + this.shopId)
+      this.$router.push({
+        path:'/detail/' + this.shopId,
+        query:{
+          t:Date.now(),
+        }
+        })
     },
     imgLoad() {
       this.$bus.$emit('imgLoad')

@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="wrapper">
     <keep-alive exclude="Detail">
-      <router-view />
+      <router-view :key="$route.path + $route.query.t"/>
     </keep-alive>
     <!-- 下方四个导航 -->
     <main-tab-bar v-if="showMainTabBar" />

@@ -10,9 +10,13 @@ export function getDetailData(iid) {
 }
 
 export function getRecommend() {
-  return request({
-    url: '/recommend',
-  })
+    return request({
+      url: '/home/data',
+      params: {
+        type: 'sell',
+        page: 20,
+      },
+    })
 }
 
 export class Goods {

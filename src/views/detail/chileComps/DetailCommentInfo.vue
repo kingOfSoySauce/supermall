@@ -80,9 +80,17 @@ export default {
     display: flex;
     flex-wrap:wrap;
     overflow: hidden;
-    justify-content: space-between;
+    justify-content: left;
+    width: 100%;
+    height: 0;
+    padding-bottom: 25%;
+    position: relative;
     img{
+      // height: 100%;
+
+
       width: 24%;
+      padding-right: 1%;
     }
   }
 }

@@ -14,7 +14,6 @@ VueRouter.prototype.replace = function replace(location) {
   return originalPush.call(this, location).catch((err) => err)
 }
 
-
 Vue.use(VueRouter)
 
 const routes = [

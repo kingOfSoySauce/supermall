@@ -16,7 +16,7 @@
       <goods-list :goods="recommends" ref="recommends"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-if="showBackTop"></back-top>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addCart='addCart'></detail-bottom-bar>
   </div>
 </template>
 
@@ -181,6 +181,19 @@ export default {
     backClick(){
       this.$refs.scroll.scrollTo(0,0)
     },
+
+    //添加购物车
+    addCart(){
+      const product={
+          image:this.topImages[0],
+          title:this.goods.title,
+          desc:this.goods.desc,
+          price:this.goods.realprice,
+          iid:this.iid,
+          count:1,
+      }
+      this.$store.commit('addCart',product)
+    }
   },
   components: {
     DetailNavBar,

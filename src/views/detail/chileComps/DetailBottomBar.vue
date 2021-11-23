@@ -15,18 +15,25 @@
       </div>
     </div>
     <div class="bar-item bar-right">
-      <div class="cart">加入购物车</div>
+      <div class="cart" @click="addToCart">加入购物车</div>
       <div class="buy">购买</div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  methods:{
+    addToCart(){
+      this.$emit('addCart')
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
 .detailBottomBar {
+  // border-bottom: solid 2px #000;
   position: fixed;
   bottom: 0px;
   left: 0;
@@ -66,13 +73,18 @@ export default {}
       line-height: 49px;
       flex: 1;
       background-color: #ffde0f;
+      border-bottom: solid 3px #ffde0f;
+      border-top: solid 3px #ffde0f;
     }
     .buy {
       height: 49px;
       line-height: 49px;
+      // border-bottom: solid 5px #ff789a;
       flex: 1;
       color: #fff;
       background-color: #ff789a;
+      border-bottom: solid 3px #ff789a;
+      border-top: solid 3px #ff789a;
     }
   }
 }
