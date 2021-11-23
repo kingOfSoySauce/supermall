@@ -2,9 +2,9 @@
   <div>
     <van-swipe class="my-swipe" :autoplay="3000" >
       <van-swipe-item v-for="item in banners" :key="item.acm">
-        <a :href="item.link">
+        <!-- <a :href="item.link"> -->
           <img :src="item.image" alt="" width="100%" @load="imgLoad"/>
-        </a>
+        <!-- </a> -->
       </van-swipe-item>
     </van-swipe>
   </div>

@@ -15,6 +15,7 @@ import PullDown from '@better-scroll/pull-down'
 import ObserveDOM from '@better-scroll/observe-dom'
 import ObserveImage from '@better-scroll/observe-image'
 
+
 BScroll.use(PullDown)
 BScroll.use(Pullup)
 BScroll.use(ObserveDOM)
@@ -51,8 +52,16 @@ export default {
       this.scroll && this.pullUpLoad && this.scroll.finishPullUp()
     },
     finishPullDown() {
-      this.scroll &&this.pullDownRefresh&& this.scroll.finishPullDown()
+      this.scroll && this.pullDownRefresh && this.scroll.finishPullDown()
     },
+    getY() {
+      if (this.scroll !== null) {
+        const y = this.scroll.y
+        // console.log(y)
+        return y
+      }
+    },
+    ...mapMutations(['enterThreshold', 'leaveThreshold']),
   },
   mounted() {
     //1.创建BScroll对象
@@ -72,30 +81,27 @@ export default {
     })
 
     //3.上拉加载更多事件
-    if(this.pullUpLoad){
+    if (this.pullUpLoad) {
       this.scroll.on('pullingUp', () => {
-      this.$emit('pullingUp')
-    })
+        this.$emit('pullingUp')
+      })
     }
 
-    if(this.pullDownRefresh){
+    if (this.pullDownRefresh) {
       //4.下拉刷新事件
-    this.scroll.on('pullingDown', () => {
-      this.$emit('pullingDown')
-    })
+      this.scroll.on('pullingDown', () => {
+        this.$emit('pullingDown')
+      })
 
-    //下拉刷新提示文字
-    this.scroll.on('enterThreshold', () => {
-      this.enterThreshold()
-    })
-    //下拉松手提示文字
-    this.scroll.on('leaveThreshold', () => {
-      this.leaveThreshold()
-    })
+      //下拉刷新提示文字
+      this.scroll.on('enterThreshold', () => {
+        this.enterThreshold()
+      })
+      //下拉松手提示文字
+      this.scroll.on('leaveThreshold', () => {
+        this.leaveThreshold()
+      })
     }
-  },
-  methods: {
-    ...mapMutations(['enterThreshold', 'leaveThreshold']),
   },
 }
 </script>

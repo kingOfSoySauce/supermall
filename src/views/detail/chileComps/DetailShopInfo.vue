@@ -49,6 +49,7 @@ export default {
 <style lang="less" scoped>
 .detailShopInfo {
   padding: 20px;
+  background-color: var(--color-background);
   .title {
     display: flex;
     justify-content: flex-start;

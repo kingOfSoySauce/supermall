@@ -1,5 +1,5 @@
 <template>
-  <div v-if="detailInfo !== null">
+  <div v-if="detailInfo !== null" class="detailInfo">
     <!-- {{ detailInfo }} -->
     <!-- 描述 -->
     <p class="desc">{{ detailInfo.desc }}</p>
@@ -36,24 +36,27 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.desc {
-  padding: 20px;
-}
-.detailImage {
-  display: flex;
-  flex-direction: column;
-  // justify-content: center;
-  align-items: center;
-  h3 {
-    margin: 0 auto;
+.detailInfo {
+  background-color: var(--color-background);
+  .desc {
+    padding: 20px;
+  }
+  .detailImage {
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+    h3 {
+      margin: 0 auto;
 
-    display: inline-block;
-    font-weight: 500;
-    font-size: 18px;
-    margin: 45px 0 10px 0;
-    padding: 8px;
-    border-radius: 5px;
-    border: solid 3px rosybrown;
+      display: inline-block;
+      font-weight: 500;
+      font-size: 18px;
+      margin: 45px 0 10px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: solid 3px rosybrown;
+    }
   }
 }
 </style>

@@ -1,77 +1,31 @@
 <template>
   <div id="detail" class="detail">
-    <DetailNavBar class="detailNavBar"></DetailNavBar>
-    <scroll class="content" ref="scroll" :pullUpLoad="false" :pullDownRefresh="false">
-      <detail-swiper :topImages="topImages"></detail-swiper>
+    <DetailNavBar class="detailNavBar" @titleClick="titleClick" :active="barActive"></DetailNavBar>
+    <scroll class="content" ref="scroll" :pullUpLoad="false" :pullDownRefresh="false" @scroll="pageScroll" :probeType="3">
+      <detail-swiper :topImages="topImages" ref="swiper"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <small-gray-bar />
       <detail-shop-info :shop="shop"></detail-shop-info>
       <small-gray-bar />
-      <datail-param-info :GoodsParam="GoodsParam"></datail-param-info>
+      <datail-param-info :GoodsParam="GoodsParam" ref="goodsParam"></datail-param-info>
       <small-gray-bar />
-      <detail-goods-info :detailInfo="detailInfo"></detail-goods-info>
-      <ul>
-        <li>1li</li>
-        <li>2li</li>
-        <li>3li</li>
-        <li>4li</li>
-        <li>5li</li>
-        <li>6li</li>
-        <li>7li</li>
-        <li>8li</li>
-        <li>9li</li>
-        <li>10li</li>
-        <li>11li</li>
-        <li>12li</li>
-        <li>13li</li>
-        <li>14li</li>
-        <li>15li</li>
-        <li>16li</li>
-        <li>17li</li>
-        <li>18li</li>
-        <li>19li</li>
-        <li>20li</li>
-        <li>21li</li>
-        <li>22li</li>
-        <li>23li</li>
-        <li>24li</li>
-        <li>25li</li>
-        <li>26li</li>
-        <li>27li</li>
-        <li>28li</li>
-        <li>29li</li>
-        <li>30li</li>
-        <li>31li</li>
-        <li>32li</li>
-        <li>33li</li>
-        <li>34li</li>
-        <li>35li</li>
-        <li>36li</li>
-        <li>37li</li>
-        <li>38li</li>
-        <li>39li</li>
-        <li>40li</li>
-        <li>41li</li>
-        <li>42li</li>
-        <li>43li</li>
-        <li>44li</li>
-        <li>45li</li>
-        <li>46li</li>
-        <li>47li</li>
-        <li>48li</li>
-        <li>49li</li>
-        <li>50li</li>
-      </ul>
+      <detail-goods-info :detailInfo="detailInfo" ref="goodsInfo"></detail-goods-info>
+      <small-gray-bar />
+      <detail-comment-info :commentInfo="commentInfo" ref="commentInfo"></detail-comment-info>
+      <small-gray-bar />
+      <goods-list :goods="recommends" ref="recommends"></goods-list>
     </scroll>
+    <back-top @click.native="backClick" v-if="showBackTop"></back-top>
+    <detail-bottom-bar></detail-bottom-bar>
   </div>
 </template>
 
 <script>
-import { getDetailData, Goods, Shop, GoodsParam } from 'network/detail'
-// import { debounce } from 'common/utils.js'
+import { getDetailData, getRecommend, Goods, Shop, GoodsParam } from 'network/detail'
 
 import SmallGrayBar from 'components/content/smallGrayBar/SmallGrayBar.vue'
 import Scroll from 'components/common/scroll/scroll.vue'
+import GoodsList from 'components/content/goods/GoodsList.vue'
 
 import DetailNavBar from './chileComps/DetailNavBar.vue'
 import DetailSwiper from './chileComps/DetailSwiper.vue'
@@ -79,6 +33,9 @@ import DetailBaseInfo from './chileComps/DetailBaseInfo.vue'
 import DetailShopInfo from './chileComps/DetailShopInfo.vue'
 import DetailGoodsInfo from './chileComps/DetailGoodsInfo.vue'
 import DatailParamInfo from './chileComps/DatailParamInfo.vue'
+import DetailCommentInfo from './chileComps/DetailCommentInfo.vue'
+import DetailBottomBar from './chileComps/DetailBottomBar.vue'
+import BackTop from '../../components/content/backTop/BackTop.vue'
 export default {
   name: 'Detail',
   data() {
@@ -90,6 +47,18 @@ export default {
       detailInfo: {},
       debounceTime: {},
       GoodsParam: {},
+      commentInfo: {},
+      recommends: [],
+      throttleTimer: null,
+      barActive: 0,
+      showBackTop:false,
+
+      //记录各个组件的位置
+      swiperY: 0,
+      goodsParamY: 0,
+      goodsInfoY: 0,
+      commentInfoY: 0,
+      recommendsY: 0,
     }
   },
   created() {
@@ -98,8 +67,32 @@ export default {
 
     //2.请求数据
     this.getDetailData()
+
+    //3.请求推荐数据
+    this.getRecommend()
+
+    //.监听图片加载完成事件
+    this.$bus.$on('detailImgLoad', () => {
+      clearTimeout(this.debounceTime)
+      this.debounceTime = setTimeout(() => {
+        if (this.$refs.scroll && this.$refs.scroll.scroll) {
+          this.$refs.scroll.scroll.refresh()
+        }
+        clearTimeout(this.debounceTime)
+        this.debounceTime = null
+      }, 200)
+    })
+  },
+  mounted() {},
+  updated() {
+    // console.log(this.$refs.goodsParam.$el.offsetTop)
+    this.goodsParamY = this.$refs.goodsParam.$el.offsetTop
+    this.goodsInfoY = this.$refs.goodsInfo.$el.offsetTop
+    this.commentInfoY = this.$refs.commentInfo.$el.offsetTop
+    this.recommendsY = this.$refs.recommends.$el.offsetTop
   },
   methods: {
+    //获取详情页信息
     async getDetailData() {
       //1.发送请求
       const { data: res } = await getDetailData(this.iid)
@@ -119,18 +112,74 @@ export default {
       //6.获取参数信息
       this.GoodsParam = new GoodsParam(data.itemParams.info, data.itemParams.rule)
 
-      //6.监听图片加载完成事件
-      this.$bus.$on('detailImgLoad', () => {
-        clearTimeout(this.debounceTime)
-        this.debounceTime = setTimeout(() => {
-          if (this.$refs.scroll && this.$refs.scroll.scroll) {
-            this.$refs.scroll.scroll.refresh()
+      //7.取出评论信息
+      if (data.rate.cRate !== 0) {
+        this.commentInfo = data.rate.list[0]
+      }
+    },
+    //获取推荐信息
+    async getRecommend() {
+      const { data: res } = await getRecommend()
+      // console.log(res.data.list)
+      this.recommends = res.data.list
+    },
+
+    //捕获详情页导航栏点击事件
+    titleClick(index) {
+      //改变显示颜色
+      this.barActive = index
+
+      //暂时禁用滚动监听300ms
+      this.throttleTimer=setTimeout(()=>{
+        this.throttleTimer=null
+      },300)
+
+      let y = 0
+      switch (index) {
+        case 0:
+          break
+        case 1:
+          y = this.goodsParamY
+          break
+        case 2:
+          y = this.goodsInfoY
+          break
+        case 3:
+          y = this.recommendsY
+          break
+      }
+      this.$refs.scroll.scrollTo(0, -y)
+    },
+
+    //页面滚动事件
+    pageScroll({ y }) {
+      if (!this.throttleTimer) {
+        this.throttleTimer = setTimeout(() => {
+          y = -y
+          //判断滚动位置
+          if (y < this.goodsParamY) {
+            this.barActive = 0
+            this.showBackTop=false//不显示返回顶部
+          } else if (y < this.goodsInfoY) {
+            this.barActive = 1
+            this.showBackTop=true//显示显示返回顶部
+          } else if (y < this.recommendsY) {
+            this.barActive = 2
+            this.showBackTop=true//显示显示返回顶部
+          } else if (y >= this.recommendsY) {
+            this.barActive = 3
+            this.showBackTop=true//显示显示返回顶部
           }
-          // console.log('refresh')
-          clearTimeout(this.debounceTime)
-          this.debounceTime = null
-        }, 200)
-      })
+
+          clearTimeout(this.throttleTimer)
+          this.throttleTimer = null
+        }, 0)
+      }
+    },
+
+    //点击返回顶部
+    backClick(){
+      this.$refs.scroll.scrollTo(0,0)
     },
   },
   components: {
@@ -142,17 +191,22 @@ export default {
     Scroll,
     DetailGoodsInfo,
     DatailParamInfo,
+    DetailCommentInfo,
+    GoodsList,
+    DetailBottomBar,
+    BackTop,
   },
 }
 </script>
-<style lang="less" scoped>
+<style,
+    DetailBottomBar lang="less" scoped>
 #detail {
-  // margin-top: 44px;
   position: relative;
-  z-index: 100;
-  background-color: #fff;
-  height: 100vh;
 
+  height: 100vh;
+  overflow: hidden;
+
+  background-color: var(--color-background);
   .detailNavBar {
     position: relative;
     // left: 0;
@@ -162,7 +216,8 @@ export default {
     background-color: #fff;
   }
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 50px);
+    overflow: hidden;
   }
 }
 </style>

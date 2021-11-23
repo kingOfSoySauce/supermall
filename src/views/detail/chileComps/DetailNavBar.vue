@@ -11,7 +11,7 @@
       <!-- 中间四个选项 -->
       <template v-slot:center>
         <div class="titles">
-          <div v-for="(item, index) in titles" @click="clickTitle(index)" :key="item" class="titleItem" :class="index === currentTitle ? 'currentTitle' : ''">
+          <div v-for="(item, index) in titles" @click="clickTitle(index)" :key="item" class="titleItem" :class="index === active ? 'currentTitle' : ''">
             {{ item }}
           </div>
         </div>
@@ -25,13 +25,22 @@ import NavBar from 'components/common/navbar/NavBar'
 export default {
   data() {
     return {
-      titles: ['商品', '参数', '评论', '推荐'],
+      titles: ['商品', '尺码', '实拍', '相关'],
       currentTitle: 0,
     }
   },
+  props:{
+    active:{
+      type:Number,
+      default:0
+    }
+  },
+
   methods: {
     clickTitle(index) {
       this.currentTitle = index
+
+      this.$emit('titleClick',index)
     },
     clickBack(){
       this.$router.back()

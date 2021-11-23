@@ -4,7 +4,7 @@
       <router-view />
     </keep-alive>
     <!-- 下方四个导航 -->
-    <main-tab-bar />
+    <main-tab-bar v-if="showMainTabBar" />
   </div>
 </template>
 
@@ -16,6 +16,17 @@ export default {
   name: 'app',
   components: {
     MainTabBar,
+  },
+  computed: {
+    showMainTabBar() {
+      const path = this.$route.path.split('/')[1]
+      // console.log(path)
+      if (path == 'home' || path == 'category' || path == 'cart' || path == 'profile') {
+        return true
+      } else {
+        return false
+      }
+    },
   },
 }
 </script>

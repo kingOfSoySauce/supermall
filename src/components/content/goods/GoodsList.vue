@@ -1,9 +1,6 @@
 <template>
   <div class="goods" ref="goods">
-    <!-- {{goods}} -->
-    <!-- <div class="item"> -->
     <goods-list-item v-for="item in goods" :key="item.acm" :goodsItem="item" />
-    <!-- </div> -->
   </div>
 </template>
 
@@ -19,14 +16,7 @@ export default {
       },
     },
   },
-  computed: {
-    goods1() {
-      return this.goods.slice(0, this.goods.length / 2)
-    },
-    goods2() {
-      return this.goods.slice(this.goods.length / 2, this.goods.length)
-    },
-  },
+  computed: {},
   mounted() {},
   components: { GoodsListItem },
 }

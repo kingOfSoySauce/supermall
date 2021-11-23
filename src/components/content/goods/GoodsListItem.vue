@@ -1,27 +1,27 @@
 <template>
   <div class="goods-list-item" @click="itemClick">
     <!-- <a :href="goodsItem.link"> -->
-      <img :src="goodsItem.show.img" alt="" @load="imgLoad"/>
-      <div class="font">
-        <span class="orgPrice">{{ goodsItem.orgPrice }}</span>
-        <span class="price">￥{{ goodsItem.price }}</span>
+    <img :src="showImage" alt="" @load="imgLoad" />
+    <div class="font">
+      <span class="orgPrice">{{ goodsItem.orgPrice }}</span>
+      <span class="price">￥{{ goodsItem.price }}</span>
 
-        <h3 class="title">{{ goodsItem.title }}</h3>
-        <div class="font-bottom">
-          <span class="sale">
-            月销量
-            <span class="sale-num">
-              {{ goodsItem.sale }}
-            </span>
+      <h3 class="title">{{ goodsItem.title }}</h3>
+      <div class="font-bottom">
+        <span class="sale">
+          月销量
+          <span class="sale-num">
+            {{ goodsItem.sale }}
           </span>
-          <span class="cfav">
-            收藏
-            <span class="cfav-num">
-              {{ goodsItem.cfav }}
-            </span>
+        </span>
+        <span class="cfav">
+          收藏
+          <span class="cfav-num">
+            {{ goodsItem.cfav }}
           </span>
-        </div>
+        </span>
       </div>
+    </div>
     <!-- </a> -->
   </div>
 </template>
@@ -34,15 +34,22 @@ export default {
       default: () => [],
     },
   },
-  methods:{
-    itemClick(){
-      this.$router.push('/detail/'+this.goodsItem.iid)
+  computed: {
+    showImage() {
+      return this.goodsItem.image || this.goodsItem.show.img
     },
-    imgLoad(){
-      // console.log('imgLoad');
+    shopId() {
+      return this.goodsItem.iid || this.goodsItem.item_id
+    },
+  },
+  methods: {
+    itemClick() {
+      this.$router.push('/detail/' + this.shopId)
+    },
+    imgLoad() {
       this.$bus.$emit('imgLoad')
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -66,7 +73,7 @@ export default {
 
   .font {
     z-index: 0;
-    
+
     margin: 3px;
 
     .orgPrice {

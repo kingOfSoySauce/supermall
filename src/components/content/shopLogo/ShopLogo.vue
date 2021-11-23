@@ -1,5 +1,5 @@
 <template>
-  <span class="box">
+  <span class="box" v-if="src !== ''">
     <img :src="src" alt="" :style="'width:' + logoWidth + 'px'" />
   </span>
 </template>

@@ -24,8 +24,10 @@
       <!-- 推荐 -->
       <recommend-view :recommends="recommends" class="height:140.61px"></recommend-view>
 
-      <!-- 推荐列表 -->
+      <!-- 推荐列表 本周流行 -->
       <feature-view class="height:278.06px"></feature-view>
+
+      <small-gray-bar></small-gray-bar>
 
       <!-- 分类bar -->
       <tab-control :title="['流行', '新款', '精选']" class="tab-control" ref="tabControl" @click.native="clickTabControl"></tab-control>
@@ -50,6 +52,7 @@ import FeatureView from './childComps/FeatureView.vue'
 import PullingDownTip from './childComps/PullingDownTip.vue'
 import GoodsList from '../../components/content/goods/GoodsList.vue'
 import BackTop from 'components/content/backTop/BackTop'
+import SmallGrayBar from '../../components/content/smallGrayBar/SmallGrayBar.vue'
 
 export default {
   name: 'Home',
@@ -64,6 +67,8 @@ export default {
       isTabShow: false,
       timer: null,
       debounceTime: null,
+      itemImgListener: null, //监听图片加载事件
+      saveY: 0, //保存页面位置
 
       goods: {
         pop: { page: 0, list: [] },
@@ -85,18 +90,37 @@ export default {
     this.getHomeGoots('sell')
   },
   mounted() {
-    this.$bus.$on('imgLoad', () => {
+    //监听图片加载事件
+    this.itemImgListener = () => {
       clearTimeout(this.debounceTime)
-
       this.debounceTime = setTimeout(() => {
         this.$refs.scroll.scroll.refresh()
         clearTimeout(this.debounceTime)
         this.debounceTime = null
       }, 200)
-    })
+    }
+    this.$bus.$on('imgLoad', this.itemImgListener)
   },
   updated() {
+    //监听tab距离顶部距离
     this.tabOffsetTop = this.$refs.tabControl && this.$refs.tabControl.$el.offsetTop
+  },
+  //组件激活时
+  activated() {
+    //跳转到对应位置
+    this.$refs.scroll.scroll.scrollTo(0, this.saveY, 0)
+    this.$refs.scroll.scroll.refresh()
+  },
+  //组件失活时
+  deactivated() {
+    // console.log('homede');
+    //保存当前浏览位置
+    const y = this.$refs.scroll.getY()
+    this.saveY = y
+    // console.log(this.$refs.scroll.getY())
+
+    //取消图片加载事件监听
+    this.$bus.$off('imgLoad', this.itemImgListener)
   },
   methods: {
     //返回顶部
@@ -119,27 +143,6 @@ export default {
         this.showBackTop = false
       }
     },
-    // contenScroll(position) {
-    //   console.log(222);
-    //   throttle(() => {
-    //     console.log(111);
-    //     this.$refs.scroll.scroll.refresh()
-
-    //     //弹出或隐藏backTop
-    //     if (position.y < -1000) {
-    //       this.showBackTop = true
-    //     } else {
-    //       this.showBackTop = false
-    //     }
-
-    //     //吸顶效果
-    //     if (-position.y > this.tabOffsetTop) {
-    //       this.isTabShow = true
-    //     } else {
-    //       this.isTabShow = false
-    //     }
-    //   }, 100)()
-    // },
 
     //下拉加载更多
     loadMore() {
@@ -192,7 +195,7 @@ export default {
       this.$refs.scroll.scroll.refresh()
     },
   },
-  components: { PullingDownTip, BackTop, Scroll, NavBar, Swipe, RecommendView, FeatureView, TabControl, GoodsList },
+  components: { PullingDownTip, BackTop, Scroll, NavBar, Swipe, RecommendView, FeatureView, TabControl, GoodsList, SmallGrayBar },
 }
 </script>
 
@@ -200,6 +203,7 @@ export default {
 .home-container {
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .fixedTop {
