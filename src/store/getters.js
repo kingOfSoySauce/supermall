@@ -8,4 +8,10 @@ export default {
   getThreshold(state) {
     return state.Threshold
   },
+  cartLength(state) {
+    return state.cartList.length
+  },
+  cartList(state) {
+    return state.cartList
+  },
 }

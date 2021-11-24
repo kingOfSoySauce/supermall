@@ -17,7 +17,7 @@ export default {
     })
     
     if (!res) {
-      console.log(res)
+      // console.log(res)
         state.cartList.push(payload)
       
     }

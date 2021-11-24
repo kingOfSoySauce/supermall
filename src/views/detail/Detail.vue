@@ -16,7 +16,7 @@
       <goods-list :goods="recommends" ref="recommends"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-if="showBackTop"></back-top>
-    <detail-bottom-bar @addCart='addCart'></detail-bottom-bar>
+    <detail-bottom-bar @addCart="addCart"></detail-bottom-bar>
   </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
       recommends: [],
       throttleTimer: null,
       barActive: 0,
-      showBackTop:false,
+      showBackTop: false,
 
       //记录各个组件的位置
       swiperY: 0,
@@ -130,9 +130,9 @@ export default {
       this.barActive = index
 
       //暂时禁用滚动监听300ms
-      this.throttleTimer=setTimeout(()=>{
-        this.throttleTimer=null
-      },300)
+      this.throttleTimer = setTimeout(() => {
+        this.throttleTimer = null
+      }, 300)
 
       let y = 0
       switch (index) {
@@ -159,16 +159,16 @@ export default {
           //判断滚动位置
           if (y < this.goodsParamY) {
             this.barActive = 0
-            this.showBackTop=false//不显示返回顶部
+            this.showBackTop = false //不显示返回顶部
           } else if (y < this.goodsInfoY) {
             this.barActive = 1
-            this.showBackTop=true//显示显示返回顶部
+            this.showBackTop = true //显示显示返回顶部
           } else if (y < this.recommendsY) {
             this.barActive = 2
-            this.showBackTop=true//显示显示返回顶部
+            this.showBackTop = true //显示显示返回顶部
           } else if (y >= this.recommendsY) {
             this.barActive = 3
-            this.showBackTop=true//显示显示返回顶部
+            this.showBackTop = true //显示显示返回顶部
           }
 
           clearTimeout(this.throttleTimer)
@@ -178,22 +178,24 @@ export default {
     },
 
     //点击返回顶部
-    backClick(){
-      this.$refs.scroll.scrollTo(0,0)
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0)
     },
 
     //添加购物车
-    addCart(){
-      const product={
-          image:this.topImages[0],
-          title:this.goods.title,
-          desc:this.goods.desc,
-          price:this.goods.realprice,
-          iid:this.iid,
-          count:1,
+    addCart() {
+      const product = {
+        image: this.topImages[0],
+        title: this.goods.title,
+        desc: this.goods.desc,
+        price: this.goods.realprice,
+        iid: this.iid,
+        shop:this.shop.name,
+        shopLogo:this.shop.logo,
+        count: 1,
       }
-      this.$store.commit('addCart',product)
-    }
+      this.$store.commit('addCart', product)
+    },
   },
   components: {
     DetailNavBar,
@@ -211,20 +213,16 @@ export default {
   },
 }
 </script>
-<style,
-    DetailBottomBar lang="less" scoped>
+<style lang="less" scoped>
 #detail {
   position: relative;
-
   height: 100vh;
   overflow: hidden;
 
   background-color: var(--color-background);
+
   .detailNavBar {
     position: relative;
-    // left: 0;
-    // right: 0;
-    // top: 0;
     z-index: 10;
     background-color: #fff;
   }
