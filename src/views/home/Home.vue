@@ -53,6 +53,7 @@ import PullingDownTip from './childComps/PullingDownTip.vue'
 import GoodsList from '../../components/content/goods/GoodsList.vue'
 import BackTop from 'components/content/backTop/BackTop'
 import SmallGrayBar from '../../components/content/smallGrayBar/SmallGrayBar.vue'
+import { Toast } from 'vant'
 
 export default {
   name: 'Home',
@@ -144,16 +145,20 @@ export default {
       }
     },
 
-    //下拉加载更多
+    //上拉加载更多
     loadMore() {
       this.getHomeGoots(this.getTabName)
       this.$refs.scroll.scroll.refresh()
     },
 
-    //上拉刷新
+    //下拉刷新
     pullDownRefresh() {
       this.getHomeGoots(this.getTabName, false)
       this.$refs.scroll.scroll.refresh()
+      Toast.success({
+        message: '刷新成功',
+        duration: 800,
+      })
     },
 
     //轮播图等数据
@@ -214,7 +219,9 @@ export default {
   z-index: 10;
   //home头顶的导航栏
   .home-nav {
-    background-color: var(--color-tint);
+    font-size: 20px;
+    font-weight: 700;
+    background-image: linear-gradient(to right, #ff8198, #f76c85);
     color: #fff;
   }
 }
@@ -228,7 +235,7 @@ export default {
   position: absolute;
   left: 0;
   right: 0;
-  top: 44px;
+  top: 43px;
   bottom: 49px;
 }
 

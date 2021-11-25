@@ -20,7 +20,6 @@ export default {
   computed: {
     showMainTabBar() {
       const path = this.$route.path.split('/')[1]
-      // console.log(path)
       if (path == 'home' || path == 'category' || path == 'cart' || path == 'profile') {
         return true
       } else {

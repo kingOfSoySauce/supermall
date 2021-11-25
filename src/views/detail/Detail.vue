@@ -36,6 +36,8 @@ import DatailParamInfo from './chileComps/DatailParamInfo.vue'
 import DetailCommentInfo from './chileComps/DetailCommentInfo.vue'
 import DetailBottomBar from './chileComps/DetailBottomBar.vue'
 import BackTop from '../../components/content/backTop/BackTop.vue'
+import { Toast } from 'vant'
+
 export default {
   name: 'Detail',
   data() {
@@ -190,11 +192,13 @@ export default {
         desc: this.goods.desc,
         price: this.goods.realprice,
         iid: this.iid,
-        shop:this.shop.name,
-        shopLogo:this.shop.logo,
+        shop: this.shop.name,
+        shopLogo: this.shop.logo,
         count: 1,
+        checked: false,
       }
       this.$store.commit('addCart', product)
+      Toast.success('已加入购物车')
     },
   },
   components: {
