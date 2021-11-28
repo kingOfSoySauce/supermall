@@ -8,7 +8,7 @@
     </div>
     <!-- 复选框 | 商品图 | 商品名 -->
     <div class="bottom">
-      <van-checkbox v-model="product.checked" icon-size="18px">
+      <van-checkbox class="bottom-left" v-model="product.checked" icon-size="18px">
         <div class="image">
           <img :src="product.image" alt="" />
         </div>
@@ -21,7 +21,7 @@
           >
           <!-- 步进器 -->
           <span @click.stop>
-            <van-stepper v-if="showStepper" v-model="product.count" theme="round" button-size="20" input-width="20"/>
+            <van-stepper v-if="showStepper" v-model="product.count" theme="round" button-size="20" input-width="20" />
             <span class="count" @click.stop="countClick" v-else>
               <span>x{{ product.count }}</span>
             </span>
@@ -83,33 +83,37 @@ export default {
     }
   }
   .bottom {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    .image {
-      // flex:2 ;
-      margin: 0 0px 0 0px;
-      width: 100px;
-      height: 100px;
-      border-radius: 15%;
-      overflow: hidden;
-      img {
-        width: 100%;
+    position: relative;
+
+    .bottom-left {
+      // float: left;
+      .image {
+        width: 30%;
+        border-radius: 15%;
+        overflow: hidden;
+        height: 0;
+        padding-bottom: 30%;
+        img {
+          width: 100%;
+        }
       }
     }
     .bottom-right {
-      // flex: 0;
-      height: 100px;
+      width: 60%;
+      position: absolute;
+      top: 0;
+      left: 40%;
+      right: 0;
+      bottom: 0;
+
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
-      padding-left: 10px;
       .title {
         color: var(--color-title);
         font-size: 16px;
         font-weight: 500;
-        width: 195px;
         text-overflow: -o-ellipsis-lastline;
         overflow: hidden;
         text-overflow: ellipsis;

@@ -1,7 +1,7 @@
 <template>
   <div class="goods-list-item" @click="itemClick">
     <!-- <a :href="goodsItem.link"> -->
-    <img :src="showImage" alt="" @load="imgLoad" />
+    <img v-lazy="showImage" alt="" @load="imgLoad" />
     <div class="font">
       <span class="orgPrice">{{ goodsItem.orgPrice }}</span>
       <span class="price">￥{{ goodsItem.price }}</span>
